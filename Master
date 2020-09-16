@@ -1,0 +1,25 @@
+#création liste
+
+#1 récuperer le fichier
+#2 évaluer ça durer
+#3 divisée cette taille en x bloque de ex 10mn
+#4 -ss  -to dans la commande
+#5 send les cmd au pc distance
+set -x
+#sudo mount -t drvfs 'z:'  /mnt/z/
+rm /mnt/z/liste.txt
+mkdir /mnt/z/ffmpegJOB
+chunkMin=5
+nbpartie=$((`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$3" |grep "^[0-9]*" -o` / 60 / $chunkMin))
+echo $nbpartie
+for i in $(seq $nbpartie); do
+	u=$(calc "($chunkMin*($i-1))%60")
+	v=$(calc "($chunkMin*$i)%60")
+	uu=$(calc "($chunkMin*($i-1))//60")
+	vv=$(calc "($chunkMin*$i)//60")
+	commande="$* -y -ss $(printf "%02d\n" $uu):$(printf "%02d\n" $u):00 -to $(printf "%02d\n" $vv):$(printf "%02d\n" $v):00 /mnt/z/ffmpegJOB/VidéoPartie$i.mkv"
+	#tabCMD[${#tabCMD[@]}]="$commande"
+	echo $commande >> /mnt/z/liste.txt  
+done
+commande="$* -y -ss $(printf "%02d\n" $vv):$(printf "%02d\n" $v):00 /mnt/z/ffmpegJOB/VidéoPartie$(($i+1)).mkv"
+echo $commande >> /mnt/z/liste.txt  
