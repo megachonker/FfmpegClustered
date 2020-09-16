@@ -5,7 +5,8 @@ var=$(sed -n '1p' /mnt/z/liste.txt)
 sed -i '1d' /mnt/z/liste.txt
 echo $var >> /mnt/z/jobRunning.txt
 $var || echo "$var"  >> /mnt/z/liste.txt
-sed -i '/$var/d' /mnt/z/jobRunning.txt
+var=$(echo "$var" | sed 's/\//\\\//g')
+sed -i "/$var/d" /mnt/z/jobRunning.txt
 echo  vous  pouver interromptre...
 sleep 3
 done
