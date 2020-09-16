@@ -1,0 +1,9 @@
+#partie esclave
+sudo mount -t drvfs 'z:'  /mnt/z/
+while  test -s /mnt/z/liste.txt
+do
+var=$(sed -n '1p' /mnt/z/liste.txt)
+sed -i '1d' /mnt/z/liste.txt
+$var || echo "$var"  >> /mnt/z/liste.txt
+done
+rm /mnt/z/liste.txt && $(for f in /mnt/z/ffmpegJOB/*; do echo "file '$f'" >> /mnt/z/concat.txt; done  ;  ffmpeg -safe 0 -f concat -i /mnt/z/concat.txt -c copy /mnt/z/output.mkv ; rm /mnt/z/concat.txt /mnt/z/ffmpegJOB/*)
