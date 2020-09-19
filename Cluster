@@ -49,3 +49,7 @@ do
 			# cp VidéoPartie* /mnt/z/
 	fi
 done
+
+
+#for file in *;do mv $file $(echo partie$(printf "%03d\n" $(echo $file|grep [0-9]
+* -o)).mkv); done
